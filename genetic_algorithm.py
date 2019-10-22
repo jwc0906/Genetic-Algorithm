@@ -67,19 +67,3 @@ def gen_algorithm(model, y_hat, x_len=5, epoch=100, p_crossover= 0.2, p_mutation
             print("[{0:5d}] loss:{1:15.20f} gen:".format(ep, loss_sorted[0]), gen_sorted[0])
 
     return loss_sorted[0], gen_sorted[0]
-
-
-# 사용 예
-if __name__=="__main__":
-
-    def model_example(x):
-        w_= np.array([[1, 5, 3, -1, -3]])
-        result= np.sum(x * w_, axis=1)
-        return result
-
-    y_hat= np.array([3])
-
-    mse_loss, x= gen_algorithm(model=model_example, y_hat=y_hat, x_len=5, epoch=100)
-
-    print(mse_loss)
-    print(x)
