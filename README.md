@@ -1,7 +1,6 @@
 # Genetic Algorithm
 
 ### example code
-
 <code><pre>from genetic_algorithm import gen_algorithm
 import numpy as np
 
