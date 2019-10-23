@@ -10,18 +10,26 @@ def sampling_tf(true_p, num):
     return idx_ft
 
 # y_hat, input of model, output of model 의 데이터타입은 모두  numpy array (float)
-def gen_algorithm(model, y_hat, x_len=5, epoch=100, p_crossover= 0.2, p_mutation= 0.2, descendants=500, max_p_clip=0.5, visible= True):
+def gen_search(model, y_hat, x_len, epoch=100, p_crossover= 0.2, p_mutation= 0.2, descendants=1000, max_p_clip=0.5, visible= True):
     #init
+    best_gen= None
+    best_loss= None
+
     gen= np.random.uniform(0, 1, [descendants,x_len])
     for ep in range(epoch):
         # loss 작을수록 sampling 확률 up
         y_pred= model(gen)
 
-        loss= (y_pred - y_hat[0])**2
-        sample_p= 1/ loss.reshape(loss.shape[0], 1)
+
+
+        loss= np.mean((y_pred - y_hat)**2, axis=0)
+
+        sample_p= 1/ loss
         sample_p= sample_p/sample_p.sum()
         sample_p= np.clip(sample_p, 0, max_p_clip)
         sample_p= sample_p/sample_p.sum()
+
+
 
         idx= loss.argsort(axis=0)
         sample_p= sample_p[idx].reshape(-1)
@@ -29,6 +37,18 @@ def gen_algorithm(model, y_hat, x_len=5, epoch=100, p_crossover= 0.2, p_mutation
         #print("")
         gen_sorted= gen[idx]
         loss_sorted= loss[idx]
+
+        if ep==0:
+            best_gen= gen_sorted[0]
+            best_loss= loss_sorted[0]
+        else:
+            if best_loss >loss_sorted[0]:
+                best_gen= gen_sorted[0]
+                best_loss= loss_sorted[0]
+
+        if (ep%(epoch//10)==0 or ep==epoch-1 ) and visible==True:
+            #print("[", ep, "]", "loss:", loss_sorted[0], "gen", gen_sorted[0])
+            print("[{0:5d}] best MSE loss:{1:15.20f} best gen:".format(ep, best_loss), best_gen)
 
 
         next_gen=None
@@ -60,10 +80,10 @@ def gen_algorithm(model, y_hat, x_len=5, epoch=100, p_crossover= 0.2, p_mutation
         next_gen= np.logical_not(idx_ft) * next_gen + idx_ft * random_gen
 
 
+
+
         # next_gen 이 현재의 gen이 됨
         gen= next_gen
-        if (ep%(epoch//10)==0 or ep==epoch-1 ) and visible==True:
-            #print("[", ep, "]", "loss:", loss_sorted[0], "gen", gen_sorted[0])
-            print("[{0:5d}] loss:{1:15.20f} gen:".format(ep, loss_sorted[0]), gen_sorted[0])
+
 
     return loss_sorted[0], gen_sorted[0]
