@@ -11,15 +11,12 @@ def model_example(x):
 y_hat= np.array([[0.3], [0.4], [0.9]])
 
 
-
-mse_loss, x= gen_search(model=model_example, y_hat=y_hat, x_len=4, epoch=100, p_crossover= 0.2, p_mutation= 0.2, descendants=1000, max_p_clip=0.5, visible= True)
-
 print("gen_search")
+mse_loss, x= gen_search(model=model_example, y_hat=y_hat, x_len=4, epoch=100, p_crossover= 0.2, p_mutation= 0.2, descendants=1000, max_p_clip=0.5, visible= True)
 print(mse_loss)
 print(x)
 
-mse_loss, x= rand_search(model=model_example, y_hat=y_hat, x_len=4, epoch=10000, descendants=2000, visible= True)
-
 print("rand_search")
+mse_loss, x= rand_search(model=model_example, y_hat=y_hat, x_len=4, epoch=10000, descendants=2000, visible= True)
 print(mse_loss)
 print(x)
