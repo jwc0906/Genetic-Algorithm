@@ -86,4 +86,4 @@ def gen_search(model, y_hat, x_len, epoch=100, p_crossover= 0.2, p_mutation= 0.2
         gen= next_gen
 
 
-    return loss_sorted[0], gen_sorted[0]
+    return best_loss, best_gen
